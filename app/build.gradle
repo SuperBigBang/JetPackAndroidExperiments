@@ -38,4 +38,5 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.6'
     annotationProcessor 'org.projectlombok:lombok:1.18.6'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

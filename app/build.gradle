@@ -37,4 +37,5 @@ dependencies {
     annotationProcessor 'android.arch.lifecycle:compiler:1.1.1'
     compileOnly 'org.projectlombok:lombok:1.18.6'
     annotationProcessor 'org.projectlombok:lombok:1.18.6'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 }

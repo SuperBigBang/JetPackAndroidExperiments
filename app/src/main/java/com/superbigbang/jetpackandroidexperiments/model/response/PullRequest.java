@@ -3,6 +3,11 @@ package com.superbigbang.jetpackandroidexperiments.model.response;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class PullRequest {
 
     @SerializedName("url")
@@ -17,37 +22,4 @@ public class PullRequest {
     @SerializedName("patch_url")
     @Expose
     private String patchUrl;
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getHtmlUrl() {
-        return htmlUrl;
-    }
-
-    public void setHtmlUrl(String htmlUrl) {
-        this.htmlUrl = htmlUrl;
-    }
-
-    public String getDiffUrl() {
-        return diffUrl;
-    }
-
-    public void setDiffUrl(String diffUrl) {
-        this.diffUrl = diffUrl;
-    }
-
-    public String getPatchUrl() {
-        return patchUrl;
-    }
-
-    public void setPatchUrl(String patchUrl) {
-        this.patchUrl = patchUrl;
-    }
-
 }

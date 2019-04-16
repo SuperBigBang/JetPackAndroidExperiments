@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         //operate
         if (issues != null && issues.get(0) != null) {
             Toast.makeText(this, "Succeful get list of issueses", Toast.LENGTH_LONG).show();
+            groupAdapter.clear();
             populateAdapter(issues);
         } else {
             Toast.makeText(this, "No data found for this query", Toast.LENGTH_LONG).show();

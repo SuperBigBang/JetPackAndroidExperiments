@@ -30,14 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     Section infiniteLoadingSection;
     private ListIssuesViewModel mViewModel;
-    /* @BindView(R.id.ownerName)
-     EditText ownerName;
-     @BindView(R.id.repositoryName)
-     EditText repositoryName;
-     @BindView(R.id.button)
-     Button button;
-     @BindView(R.id.listOfIssueses)
-     RecyclerView listOfIssueses;*/
     private ActivityMainBinding binding;
     private GroupAdapter groupAdapter;
     private GridLayoutManager layoutManager;
@@ -147,6 +139,6 @@ public class MainActivity extends AppCompatActivity {
         if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
             Toast.makeText(this, "Please enter Owner name and Repository", Toast.LENGTH_LONG).show();
         } else
-            mViewModel.loadIssues(binding.ownerName.getText().toString(), binding.repositoryName.getText().toString());
+            mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
     }
 }

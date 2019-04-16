@@ -33,18 +33,34 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private GroupAdapter groupAdapter;
     private GridLayoutManager layoutManager;
-    private OnItemClickListener onItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(Item item, View view) {
-           /* if (item instanceof CardItem) {
-                CardItem cardItem = (CardItem) item;
-                if (!TextUtils.isEmpty(cardItem.getText())) {
-                    Toast.makeText(MainActivity.this, cardItem.getText(), Toast.LENGTH_SHORT).show();
-                }
+    private OnItemClickListener onItemClickListener = (item, view) -> {
+   /*     if (item instanceof CardItem) {
+            CardItem cardItem = (CardItem) item;
+            if (!TextUtils.isEmpty(cardItem.)) {
+                Toast.makeText(MainActivity.this, cardItem.getText(), Toast.LENGTH_SHORT).show();
             }
-        }*/
+        }
+    }*/
+    };
+
+    private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = new CardItem.OnCardItemChildClickListener() {
+        @Override
+        public void OnChildClick(CardItem item, View view) {
+            switch (view.getId()) {
+                case R.id.author_avatar:
+                    Toast.makeText(MainActivity.this, item.getAuthor_avatar(), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.creatorName:
+                    Toast.makeText(MainActivity.this, item.getCreatorName(), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.titleOfIssue:
+                    Toast.makeText(MainActivity.this, "Click on :" + item.getTitleOfIssue(), Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     };
+
+
     private OnItemLongClickListener onItemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(Item item, View view) {
@@ -109,13 +125,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void populateAdapter(List issues) {
-        // Infinite loading section
         infiniteLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
         for (int i = 0; i < issues.size(); i++) {
-            infiniteLoadingSection.add(new CardItem(getResources().getColor(R.color.blue_200),
+            CardItem cardItem = new CardItem(getResources().getColor(R.color.blue_200),
                     ((Issue) issues.get(i)).getTitle(),
                     ((Issue) issues.get(i)).getUser().getLogin(),
-                    ((Issue) issues.get(i)).getUser().getAvatarUrl()));
+                    ((Issue) issues.get(i)).getUser().getAvatarUrl(),
+                    onCardItemChildClickListener);
+            // cardItem.setOnItemClickListener();
+            infiniteLoadingSection.add(cardItem);
         }
         groupAdapter.add(infiniteLoadingSection);
     }
@@ -123,10 +141,6 @@ public class MainActivity extends AppCompatActivity {
     void handleResponse(List issues) {
         //operate
         if (issues != null && issues.get(0) != null) {
-            Issue issue = (Issue) issues.get(0);
-            Timber.e(issue.getTitle());
-            Timber.e(issue.getId().toString());
-            Timber.e(issue.getUser().getLogin());
             Toast.makeText(this, "Succeful get list of issueses", Toast.LENGTH_LONG).show();
             populateAdapter(issues);
         } else {

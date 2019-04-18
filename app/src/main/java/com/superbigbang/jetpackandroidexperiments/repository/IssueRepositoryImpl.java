@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class IssueRepositoryImpl implements IssueRepository {
 
@@ -21,7 +21,7 @@ public class IssueRepositoryImpl implements IssueRepository {
 
     public IssueRepositoryImpl() {
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create())
                 .baseUrl(BASE_URL)
                 .build();
         mApiService = retrofit.create(GithubApiService.class);

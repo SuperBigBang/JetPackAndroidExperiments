@@ -7,8 +7,8 @@ import android.widget.Toast;
 import com.superbigbang.jetpackandroidexperiments.databinding.ActivityMainBinding;
 import com.superbigbang.jetpackandroidexperiments.model.CardItem;
 import com.superbigbang.jetpackandroidexperiments.model.HeaderItem;
-import com.superbigbang.jetpackandroidexperiments.model.ListIssuesViewModel;
 import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
+import com.superbigbang.jetpackandroidexperiments.viewModels.ListIssuesViewModel;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Item;
 import com.xwray.groupie.OnItemClickListener;
@@ -103,14 +103,6 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView = binding.listOfIssueses;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(groupAdapter);
-
-     /*  recyclerView.addOnScrollListener(new InfiniteScrollListener(layoutManager) {
-            @Override public void onLoadMore(int currentPage) {
-                for (int i = 0; i < 5; i++) {
-                    infiniteLoadingSection.add(new CardItem(getResources().getColor(R.color.blue_200)));
-                }
-            }
-        });*/
 
         Timber.plant(new Timber.DebugTree()); //next time move it in Application class
 

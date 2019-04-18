@@ -1,4 +1,4 @@
-package com.superbigbang.jetpackandroidexperiments.model;
+package com.superbigbang.jetpackandroidexperiments.viewModels;
 
 import com.superbigbang.jetpackandroidexperiments.model.response.ApiResponse;
 import com.superbigbang.jetpackandroidexperiments.repository.IssueRepository;

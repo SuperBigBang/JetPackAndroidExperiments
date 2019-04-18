@@ -33,12 +33,12 @@ public class IssueRepositoryImpl implements IssueRepository {
         call.enqueue(new Callback<List<Issue>>() {
             @Override
             public void onResponse(Call<List<Issue>> call, Response<List<Issue>> response) {
-                liveData.setValue(new ApiResponse(response.body()));
+                liveData.postValue(new ApiResponse(response.body()));
             }
 
             @Override
             public void onFailure(Call<List<Issue>> call, Throwable t) {
-                liveData.setValue(new ApiResponse(t));
+                liveData.postValue(new ApiResponse(t));
             }
         });
         return liveData;

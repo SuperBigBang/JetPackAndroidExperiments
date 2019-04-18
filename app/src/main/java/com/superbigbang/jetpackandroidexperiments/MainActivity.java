@@ -28,6 +28,8 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int LAYOUT = R.layout.activity_main;
+
     Section infiniteLoadingSection;
     private ListIssuesViewModel mViewModel;
     private ActivityMainBinding binding;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, LAYOUT);
         ButterKnife.bind(this);
 
         groupAdapter = new GroupAdapter();
@@ -113,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         Timber.plant(new Timber.DebugTree()); //next time move it in Application class
 
         mViewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
-        //setupView();
         // Handle changes emitted by LiveData
         mViewModel.getApiResponse().observe(this, apiResponse -> {
             if (apiResponse.getError() != null) {

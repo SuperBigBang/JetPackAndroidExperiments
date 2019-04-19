@@ -1,4 +1,4 @@
-package com.superbigbang.jetpackandroidexperiments.retrofit;
+package com.superbigbang.jetpackandroidexperiments.di.modules.repositoryModule.retrofit;
 
 import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
 

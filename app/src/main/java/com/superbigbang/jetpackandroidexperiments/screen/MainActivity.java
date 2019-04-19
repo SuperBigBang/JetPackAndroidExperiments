@@ -61,8 +61,6 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView = binding.listOfIssueses;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(groupAdapter);
-
-        Timber.plant(new Timber.DebugTree()); //next time move it in Application class
     }
 
     private void populateAdapter(List issues) {

@@ -6,21 +6,22 @@ import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.superbigbang.jetpackandroidexperiments.ExtendApplication;
+import com.superbigbang.jetpackandroidexperiments.di.modules.repositoryModule.IssueRepository;
 import com.superbigbang.jetpackandroidexperiments.model.response.ApiResponse;
-import com.superbigbang.jetpackandroidexperiments.repository.IssueRepository;
-import com.superbigbang.jetpackandroidexperiments.repository.IssueRepositoryImpl;
 import com.xwray.groupie.GroupAdapter;
 
 public class MainActivityViewModel extends ViewModel {
 
     private MediatorLiveData<ApiResponse> mApiResponse;
-    private IssueRepository mIssueRepository;
     private MutableLiveData<GroupAdapter> mGroupAdapter;
+
+    private IssueRepository mIssueRepository;
 
     // No argument constructor
     public MainActivityViewModel() {
         mApiResponse = new MediatorLiveData<>();
-        mIssueRepository = new IssueRepositoryImpl();
+        mIssueRepository = ExtendApplication.getBaseComponent().getIssueRepositoryImpl();
         mGroupAdapter = new MutableLiveData<>();
         mGroupAdapter.setValue(setupGroupAdapter());
     }
@@ -30,12 +31,11 @@ public class MainActivityViewModel extends ViewModel {
         return mApiResponse;
     }
 
-    public LiveData<ApiResponse> loadIssues(@NonNull String user, String repo) {
+    public void loadIssues(@NonNull String user, @NonNull String repo) {
         mApiResponse.addSource(
                 mIssueRepository.getIssues(user, repo),
                 apiResponse -> mApiResponse.setValue(apiResponse)
         );
-        return mApiResponse;
     }
 
     @NonNull

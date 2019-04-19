@@ -1,4 +1,4 @@
-package com.superbigbang.jetpackandroidexperiments;
+package com.superbigbang.jetpackandroidexperiments.screen;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -10,11 +10,12 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.superbigbang.jetpackandroidexperiments.R;
 import com.superbigbang.jetpackandroidexperiments.databinding.ActivityMainBinding;
 import com.superbigbang.jetpackandroidexperiments.model.CardItem;
 import com.superbigbang.jetpackandroidexperiments.model.HeaderItem;
 import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
-import com.superbigbang.jetpackandroidexperiments.viewModels.MainActivityViewModel;
+import com.superbigbang.jetpackandroidexperiments.screen.viewModels.MainActivityViewModel;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Section;
 

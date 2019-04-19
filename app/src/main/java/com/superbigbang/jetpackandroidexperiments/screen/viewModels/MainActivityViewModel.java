@@ -1,4 +1,4 @@
-package com.superbigbang.jetpackandroidexperiments.viewModels;
+package com.superbigbang.jetpackandroidexperiments.screen.viewModels;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;

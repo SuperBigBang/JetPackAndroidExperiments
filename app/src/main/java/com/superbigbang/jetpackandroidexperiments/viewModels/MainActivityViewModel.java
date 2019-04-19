@@ -1,21 +1,21 @@
 package com.superbigbang.jetpackandroidexperiments.viewModels;
 
-import com.superbigbang.jetpackandroidexperiments.model.response.ApiResponse;
-import com.superbigbang.jetpackandroidexperiments.repository.IssueRepository;
-import com.superbigbang.jetpackandroidexperiments.repository.IssueRepositoryImpl;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ListIssuesViewModel extends ViewModel {
+import com.superbigbang.jetpackandroidexperiments.model.response.ApiResponse;
+import com.superbigbang.jetpackandroidexperiments.repository.IssueRepository;
+import com.superbigbang.jetpackandroidexperiments.repository.IssueRepositoryImpl;
+
+public class MainActivityViewModel extends ViewModel {
 
     private MediatorLiveData<ApiResponse> mApiResponse;
     private IssueRepository mIssueRepository;
 
     // No argument constructor
-    public ListIssuesViewModel() {
+    public MainActivityViewModel() {
         mApiResponse = new MediatorLiveData<>();
         mIssueRepository = new IssueRepositoryImpl();
     }

@@ -4,11 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.superbigbang.jetpackandroidexperiments.databinding.ActivityMainBinding;
 import com.superbigbang.jetpackandroidexperiments.model.CardItem;
 import com.superbigbang.jetpackandroidexperiments.model.HeaderItem;
 import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
-import com.superbigbang.jetpackandroidexperiments.viewModels.ListIssuesViewModel;
+import com.superbigbang.jetpackandroidexperiments.viewModels.MainActivityViewModel;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Item;
 import com.xwray.groupie.OnItemClickListener;
@@ -17,11 +23,6 @@ import com.xwray.groupie.Section;
 
 import java.util.List;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import timber.log.Timber;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int LAYOUT = R.layout.activity_main;
 
     Section infiniteLoadingSection;
-    private ListIssuesViewModel mViewModel;
+    private MainActivityViewModel mViewModel;
     private ActivityMainBinding binding;
     private GroupAdapter groupAdapter;
     private GridLayoutManager layoutManager;
@@ -88,9 +89,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = DataBindingUtil.setContentView(this, LAYOUT);
         ButterKnife.bind(this);
+
+        mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
+        // Handle changes emitted by LiveData
+        mViewModel.getApiResponse().observe(this, apiResponse -> {
+            if (apiResponse.getError() != null) {
+                handleError(apiResponse.getError());
+            } else {
+                handleResponse(apiResponse.getIssues());
+            }
+        });
 
         groupAdapter = new GroupAdapter();
         groupAdapter.setOnItemClickListener(onItemClickListener);
@@ -106,15 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
         Timber.plant(new Timber.DebugTree()); //next time move it in Application class
 
-        mViewModel = ViewModelProviders.of(this).get(ListIssuesViewModel.class);
-        // Handle changes emitted by LiveData
-        mViewModel.getApiResponse().observe(this, apiResponse -> {
-            if (apiResponse.getError() != null) {
-                handleError(apiResponse.getError());
-            } else {
-                handleResponse(apiResponse.getIssues());
-            }
-        });
+
     }
 
     private void populateAdapter(List issues) {

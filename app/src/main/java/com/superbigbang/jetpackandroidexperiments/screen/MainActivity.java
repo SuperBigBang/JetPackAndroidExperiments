@@ -35,25 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private GroupAdapter groupAdapter;
     private GridLayoutManager layoutManager;
 
-    private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = (item, view) -> {
-        switch (view.getId()) {
-            case R.id.author_avatar:
-                Toast.makeText(MainActivity.this, item.getAuthor_avatar(), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.creatorName:
-                Toast.makeText(MainActivity.this, item.getCreatorName(), Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.titleOfIssue:
-                Toast.makeText(MainActivity.this, "Click on :" + item.getTitleOfIssue(), Toast.LENGTH_LONG).show();
-                break;
-        }
-    };
-
-    void handleError(Throwable error) {
-        Timber.e(error);
-        Toast.makeText(this, "Get ERROR, show info in Logcat", Toast.LENGTH_LONG).show();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +99,25 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No data found for this query", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = (item, view) -> {
+        switch (view.getId()) {
+            case R.id.author_avatar:
+                Toast.makeText(MainActivity.this, item.getAuthor_avatar(), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.creatorName:
+                Toast.makeText(MainActivity.this, item.getCreatorName(), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.titleOfIssue:
+                Toast.makeText(MainActivity.this, "Click on :" + item.getTitleOfIssue(), Toast.LENGTH_LONG).show();
+                break;
+        }
+    };
+
+    void handleError(Throwable error) {
+        Timber.e(error);
+        Toast.makeText(this, "Get ERROR, show info in Logcat", Toast.LENGTH_LONG).show();
     }
 
     @OnClick(R.id.button)

@@ -17,7 +17,6 @@ import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
 import com.superbigbang.jetpackandroidexperiments.viewModels.MainActivityViewModel;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Item;
-import com.xwray.groupie.OnItemClickListener;
 import com.xwray.groupie.OnItemLongClickListener;
 import com.xwray.groupie.Section;
 
@@ -36,15 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private GroupAdapter groupAdapter;
     private GridLayoutManager layoutManager;
-    private OnItemClickListener onItemClickListener = (item, view) -> {
-   /*     if (item instanceof CardItem) {
-            CardItem cardItem = (CardItem) item;
-            if (!TextUtils.isEmpty(cardItem.)) {
-                Toast.makeText(MainActivity.this, cardItem.getText(), Toast.LENGTH_SHORT).show();
-            }
-        }
-    }*/
-    };
 
     private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = new CardItem.OnCardItemChildClickListener() {
         @Override
@@ -102,21 +92,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        groupAdapter = new GroupAdapter();
-        groupAdapter.setOnItemClickListener(onItemClickListener);
-        groupAdapter.setOnItemLongClickListener(onItemLongClickListener);
-        groupAdapter.setSpanCount(12);
+        groupAdapter = mViewModel.getGroupAdapter().getValue();
 
-        layoutManager = new GridLayoutManager(this, groupAdapter.getSpanCount());
-        layoutManager.setSpanSizeLookup(groupAdapter.getSpanSizeLookup());
+        if (groupAdapter != null) {
+            layoutManager = new GridLayoutManager(this, groupAdapter.getSpanCount());
+            layoutManager.setSpanSizeLookup(groupAdapter.getSpanSizeLookup());
+        }
 
         final RecyclerView recyclerView = binding.listOfIssueses;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(groupAdapter);
 
         Timber.plant(new Timber.DebugTree()); //next time move it in Application class
-
-
     }
 
     private void populateAdapter(List issues) {
@@ -151,4 +138,14 @@ public class MainActivity extends AppCompatActivity {
         } else
             mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
     }
+
+    /*   private OnItemClickListener onItemClickListener = (item, view) -> {
+        if (item instanceof CardItem) {
+            CardItem cardItem = (CardItem) item;
+            if (!TextUtils.isEmpty(cardItem.)) {
+                Toast.makeText(MainActivity.this, cardItem.getText(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    };*/
 }

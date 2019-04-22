@@ -3,6 +3,7 @@ package com.superbigbang.jetpackandroidexperiments.screen.viewModels;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -102,6 +103,22 @@ public class MainActivityViewModel extends ViewModel {
         return groupAdapter;
     }
 
+    private Handler handler = new Handler();
+    private CardItem.OnFavoriteListener onFavoriteListener = new CardItem.OnFavoriteListener() {
+        @Override
+        public void onFavorite(final CardItem item, final boolean favorite) {
+            // Pretend to make a network request
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // Network request was successful!
+                    item.setFavorite(favorite);
+                    item.notifyChanged(CardItem.FAVORITE);
+                }
+            }, 1000);
+        }
+    };
+
     private void populateAdapter(List issues) {
         fromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
         for (int i = 0; i < issues.size(); i++) {
@@ -112,13 +129,15 @@ public class MainActivityViewModel extends ViewModel {
                         ((Issue) issues.get(i)).getTitle(),
                         ((Issue) issues.get(i)).getUser().getLogin(),
                         ((Issue) issues.get(i)).getUser().getAvatarUrl(),
-                        onCardItemChildClickListener);
+                        onCardItemChildClickListener,
+                        onFavoriteListener);
             } else {
                 cardItem = new CardItem(mResourcesFromAppContext.getColor(R.color.blue_200),
                         ((Issue) issues.get(i)).getTitle(),
                         ((Issue) issues.get(i)).getUser().getLogin(),
                         ((Issue) issues.get(i)).getUser().getAvatarUrl(),
-                        onCardItemChildClickListener);
+                        onCardItemChildClickListener,
+                        onFavoriteListener);
             }
 
             // cardItem.setOnItemClickListener();

@@ -1,5 +1,6 @@
 package com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems;
 
+import android.graphics.drawable.Animatable;
 import android.view.View;
 
 import androidx.annotation.ColorInt;
@@ -17,6 +18,8 @@ import lombok.Setter;
 @Setter
 public class CardItem extends BindableItem<IssueItemBinding> {
 
+    public static final String FAVORITE = "FAVORITE";
+
     //   private OnItemClickListener onItemClickListener;
     @ColorInt
     private int colorRes;
@@ -25,16 +28,22 @@ public class CardItem extends BindableItem<IssueItemBinding> {
     private CharSequence author_avatar;
     private OnCardItemChildClickListener onCardItemChildClickListener;
 
-    public CardItem(@ColorInt int colorRes, OnCardItemChildClickListener onCardItemChildClickListener) {
-        this(colorRes, "", "", "", onCardItemChildClickListener);
+    private OnFavoriteListener onFavoriteListener;
+    private boolean checked = false;
+    private boolean inProgress = false;
+
+
+    public CardItem(@ColorInt int colorRes, OnCardItemChildClickListener onCardItemChildClickListener, OnFavoriteListener onFavoriteListener) {
+        this(colorRes, "", "", "", onCardItemChildClickListener, onFavoriteListener);
     }
 
-    public CardItem(@ColorInt int colorRes, CharSequence titleOfIssue, CharSequence creatorName, CharSequence author_avatar, OnCardItemChildClickListener onCardItemChildClickListener) {
+    public CardItem(@ColorInt int colorRes, CharSequence titleOfIssue, CharSequence creatorName, CharSequence author_avatar, OnCardItemChildClickListener onCardItemChildClickListener, OnFavoriteListener onFavoriteListener) {
         this.colorRes = colorRes;
         this.titleOfIssue = titleOfIssue;
         this.creatorName = creatorName;
         this.author_avatar = author_avatar;
         this.onCardItemChildClickListener = onCardItemChildClickListener;
+        this.onFavoriteListener = onFavoriteListener;
         //   getExtras().put(INSET_TYPE_KEY, INSET);
     }
 
@@ -52,9 +61,43 @@ public class CardItem extends BindableItem<IssueItemBinding> {
         viewBinding.titleOfIssue.setOnClickListener(v -> onCardItemChildClickListener.OnChildClick(CardItem.this, v));
         viewBinding.creatorName.setOnClickListener(v -> onCardItemChildClickListener.OnChildClick(CardItem.this, v));
         viewBinding.authorAvatar.setOnClickListener(v -> onCardItemChildClickListener.OnChildClick(CardItem.this, v));
+
+        bindHeart(viewBinding);
+        viewBinding.favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inProgress = true;
+                animateProgress(viewBinding);
+
+                onFavoriteListener.onFavorite(CardItem.this, !checked);
+            }
+        });
+    }
+
+    private void bindHeart(IssueItemBinding binding) {
+        if (inProgress) {
+            animateProgress(binding);
+        } else {
+            binding.favorite.setImageResource(R.drawable.favorite_state_list);
+        }
+        binding.favorite.setChecked(checked);
+    }
+
+    private void animateProgress(IssueItemBinding binding) {
+        binding.favorite.setImageResource(R.drawable.avd_favorite_progress);
+        ((Animatable) binding.favorite.getDrawable()).start();
+    }
+
+    public void setFavorite(boolean favorite) {
+        inProgress = false;
+        checked = favorite;
     }
 
     public interface OnCardItemChildClickListener {
         void OnChildClick(CardItem cardItem, View view);
+    }
+
+    public interface OnFavoriteListener {
+        void onFavorite(CardItem item, boolean favorite);
     }
 }

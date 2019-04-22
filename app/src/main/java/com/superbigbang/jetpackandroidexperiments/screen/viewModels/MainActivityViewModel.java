@@ -61,17 +61,6 @@ public class MainActivityViewModel extends ViewModel {
 
     }
 
-    public void handleResponse(List issues) {
-        //operate
-        if (issues != null && issues.get(0) != null) {
-            Toast.makeText(mApplicationContext, R.string.succeful_get_list_of_issueses, Toast.LENGTH_LONG).show();
-            Objects.requireNonNull(mGroupAdapter.getValue()).clear();
-            populateAdapter(issues);
-        } else {
-            Toast.makeText(mApplicationContext, R.string.no_data_found_for_this_query, Toast.LENGTH_LONG).show();
-        }
-    }
-
     @NonNull
     public LiveData<ApiResponse> getApiResponse() {
         return mApiResponse;
@@ -82,6 +71,17 @@ public class MainActivityViewModel extends ViewModel {
                 mIssueRepository.getIssues(user, repo),
                 apiResponse -> mApiResponse.setValue(apiResponse)
         );
+    }
+
+    public void handleResponse(List issues) {
+        //operate
+        if (issues != null && issues.get(0) != null) {
+            Toast.makeText(mApplicationContext, R.string.succeful_get_list_of_issueses, Toast.LENGTH_LONG).show();
+            Objects.requireNonNull(mGroupAdapter.getValue()).clear();
+            populateAdapter(issues);
+        } else {
+            Toast.makeText(mApplicationContext, R.string.no_data_found_for_this_query, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void handleError(Throwable error) {

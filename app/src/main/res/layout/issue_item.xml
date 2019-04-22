@@ -55,6 +55,20 @@
                 app:layout_constraintStart_toEndOf="@id/author_avatar"
                 app:layout_constraintTop_toTopOf="@+id/author_avatar" />
 
+            <com.superbigbang.jetpackandroidexperiments.widget.CheckableImageView
+                android:id="@+id/favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ripple_circular"
+                android:padding="@dimen/padding_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/favorite_state_list" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </layout>

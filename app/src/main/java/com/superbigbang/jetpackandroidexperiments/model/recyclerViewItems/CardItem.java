@@ -1,14 +1,15 @@
-package com.superbigbang.jetpackandroidexperiments.model;
+package com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems;
 
 import android.view.View;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 import com.superbigbang.jetpackandroidexperiments.R;
 import com.superbigbang.jetpackandroidexperiments.databinding.IssueItemBinding;
 import com.xwray.groupie.databinding.BindableItem;
 
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
 import lombok.Getter;
 import lombok.Setter;
 

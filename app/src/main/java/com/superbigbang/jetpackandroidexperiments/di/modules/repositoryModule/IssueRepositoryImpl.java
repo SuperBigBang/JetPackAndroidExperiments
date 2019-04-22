@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.superbigbang.jetpackandroidexperiments.di.modules.repositoryModule.retrofit.GithubApiService;
-import com.superbigbang.jetpackandroidexperiments.model.response.ApiResponse;
-import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
+import com.superbigbang.jetpackandroidexperiments.model.issueResponse.ApiResponse;
+import com.superbigbang.jetpackandroidexperiments.model.issueResponse.Issue;
 
 import java.util.List;
 

@@ -5,4 +5,8 @@
     <string name="show_issues">Show issues</string>
     <string name="issues_of_this_repository">Issues of this repository</string>
     <string name="author_avatar">author avatar</string>
+    <string name="succeful_get_list_of_issueses">Succeful get list of issueses</string>
+    <string name="no_data_found_for_this_query">No data found for this query</string>
+    <string name="get_ERROR_show_info_in_Logcat">Get ERROR, show info in Logcat</string>
+    <string name="enter_Owner_name_and_Repository">Please enter Owner name and Repository</string>
 </resources>

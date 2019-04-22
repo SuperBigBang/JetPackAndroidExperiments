@@ -1,6 +1,6 @@
 package com.superbigbang.jetpackandroidexperiments.di.modules.repositoryModule.retrofit;
 
-import com.superbigbang.jetpackandroidexperiments.model.response.Issue;
+import com.superbigbang.jetpackandroidexperiments.model.issueResponse.Issue;
 
 import java.util.List;
 

@@ -1,15 +1,15 @@
-package com.superbigbang.jetpackandroidexperiments.model;
+package com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems;
 
 import android.annotation.SuppressLint;
 import android.view.View;
 
-import com.superbigbang.jetpackandroidexperiments.R;
-import com.superbigbang.jetpackandroidexperiments.databinding.ItemHeaderBinding;
-import com.xwray.groupie.databinding.BindableItem;
-
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+
+import com.superbigbang.jetpackandroidexperiments.R;
+import com.superbigbang.jetpackandroidexperiments.databinding.ItemHeaderBinding;
+import com.xwray.groupie.databinding.BindableItem;
 
 public class HeaderItem extends BindableItem<ItemHeaderBinding> {
 

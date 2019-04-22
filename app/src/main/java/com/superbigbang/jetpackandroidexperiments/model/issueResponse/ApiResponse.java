@@ -1,4 +1,4 @@
-package com.superbigbang.jetpackandroidexperiments.model.response;
+package com.superbigbang.jetpackandroidexperiments.model.issueResponse;
 
 import java.util.List;
 

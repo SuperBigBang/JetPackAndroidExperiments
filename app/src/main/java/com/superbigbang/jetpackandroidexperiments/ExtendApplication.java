@@ -6,6 +6,7 @@ import com.superbigbang.jetpackandroidexperiments.di.BaseComponent;
 import com.superbigbang.jetpackandroidexperiments.di.DaggerBaseComponent;
 import com.superbigbang.jetpackandroidexperiments.di.modules.ContextModule;
 import com.superbigbang.jetpackandroidexperiments.di.modules.RepositoryModule;
+import com.superbigbang.jetpackandroidexperiments.di.modules.RoomModule;
 
 import timber.log.Timber;
 
@@ -27,6 +28,7 @@ public class ExtendApplication extends Application {
         sBaseComponent = DaggerBaseComponent.builder()
                 .contextModule(new ContextModule(this))
                 .repositoryModule(new RepositoryModule())
+                .roomModule(new RoomModule(this))
                 .build();
     }
 }

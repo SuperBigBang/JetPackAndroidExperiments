@@ -74,7 +74,6 @@ public class MainActivityViewModel extends ViewModel {
                             new Consumer<String>() {
                                 @Override
                                 public void accept(final String string) throws Exception {
-                                    showCurrentThread();
                                     Toast.makeText(mApplicationContext, string + " - issue successfully added to DB", Toast.LENGTH_LONG).show();
                                     item.setEndStateForFavoriteMarker(item, favorite);
                                 }
@@ -154,19 +153,21 @@ public class MainActivityViewModel extends ViewModel {
         mFromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
         for (int i = 0; i < issues.size(); i++) {
             CardItem cardItem = null;
-
+            Issue issue = (Issue) issues.get(i);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 cardItem = new CardItem(mResourcesFromAppContext.getColor(R.color.blue_200, mApplicationContext.getTheme()),
-                        ((Issue) issues.get(i)).getTitle(),
-                        ((Issue) issues.get(i)).getUser().getLogin(),
-                        ((Issue) issues.get(i)).getUser().getAvatarUrl(),
+                        issue.getId(),
+                        issue.getTitle(),
+                        issue.getUser().getLogin(),
+                        issue.getUser().getAvatarUrl(),
                         onCardItemChildClickListener,
                         onFavoriteListener);
             } else {
                 cardItem = new CardItem(mResourcesFromAppContext.getColor(R.color.blue_200),
-                        ((Issue) issues.get(i)).getTitle(),
-                        ((Issue) issues.get(i)).getUser().getLogin(),
-                        ((Issue) issues.get(i)).getUser().getAvatarUrl(),
+                        issue.getId(),
+                        issue.getTitle(),
+                        issue.getUser().getLogin(),
+                        issue.getUser().getAvatarUrl(),
                         onCardItemChildClickListener,
                         onFavoriteListener);
             }
@@ -206,7 +207,6 @@ public class MainActivityViewModel extends ViewModel {
 
         @Override
         public String call() throws Exception {
-            showCurrentThread();
             return addNewIssueToDB(cardItem);
         }
     }

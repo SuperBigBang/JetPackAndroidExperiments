@@ -9,4 +9,6 @@
     <string name="no_data_found_for_this_query">No data found for this query</string>
     <string name="get_ERROR_show_info_in_Logcat">Get ERROR, show info in Logcat</string>
     <string name="enter_Owner_name_and_Repository">Please enter Owner name and Repository</string>
+    <string name="error_card_already_in_DB">This card has already been entered into the database.</string>
+    <string name="error_in_retrieving_data">Error in retrieving data</string>
 </resources>

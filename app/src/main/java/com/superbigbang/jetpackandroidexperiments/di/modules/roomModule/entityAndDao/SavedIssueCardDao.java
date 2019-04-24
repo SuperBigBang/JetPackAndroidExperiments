@@ -17,11 +17,11 @@ public interface SavedIssueCardDao {
     SavedIssueCard getById(long id);
 
     @Insert
-    void insert(SavedIssueCard employee);
+    void insert(SavedIssueCard savedIssueCard);
 
     @Update
-    void update(SavedIssueCard employee);
+    void update(SavedIssueCard savedIssueCard);
 
     @Delete
-    void delete(SavedIssueCard employee);
+    void delete(SavedIssueCard savedIssueCard);
 }

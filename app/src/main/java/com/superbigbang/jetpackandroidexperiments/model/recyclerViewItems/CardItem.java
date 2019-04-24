@@ -11,8 +11,13 @@ import com.superbigbang.jetpackandroidexperiments.R;
 import com.superbigbang.jetpackandroidexperiments.databinding.IssueItemBinding;
 import com.xwray.groupie.databinding.BindableItem;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Completable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import lombok.Getter;
 import lombok.Setter;
+import timber.log.Timber;
 
 @Getter
 @Setter
@@ -99,5 +104,17 @@ public class CardItem extends BindableItem<IssueItemBinding> {
 
     public interface OnFavoriteListener {
         void onFavorite(CardItem item, boolean favorite);
+    }
+
+    public void setEndStateForFavoriteMarker(final CardItem item, final boolean favorite) {
+        Completable.timer(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete(() -> {
+                    // Network request was successful!
+                    Timber.e("Current Thread: %s", Thread.currentThread().getName());
+                    item.setFavorite(favorite);
+                    item.notifyChanged(CardItem.FAVORITE);
+                })
+                .subscribe();
     }
 }

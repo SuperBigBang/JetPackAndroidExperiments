@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle changes emitted by LiveData
         mViewModel.getApiResponse().observe(this, apiResponse -> {
             if (apiResponse.getError() != null) {
-                mViewModel.handleError(apiResponse.getError());
+                mViewModel.handleError(apiResponse.getError(), getString(R.string.error_in_retrieving_data));
             } else {
                 mViewModel.handleResponse(apiResponse.getIssues());
             }

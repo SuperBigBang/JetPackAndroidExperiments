@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel mViewModel;
     private ActivityMainBinding binding;
-    private GroupAdapter groupAdapter;
+    private GroupAdapter mGroupAdapter;
     private GridLayoutManager layoutManager;
 
     @Override
@@ -37,30 +37,35 @@ public class MainActivity extends AppCompatActivity {
         // Handle changes emitted by LiveData
         mViewModel.getApiResponse().observe(this, apiResponse -> {
             if (apiResponse.getError() != null) {
-                mViewModel.handleError(apiResponse.getError(), getString(R.string.error_in_retrieving_data));
+                mViewModel.handleError(apiResponse.getError(), MainActivity.this.getString(R.string.error_in_retrieving_data));
             } else {
                 mViewModel.handleResponse(apiResponse.getIssues());
             }
         });
 
-        groupAdapter = mViewModel.getGroupAdapter().getValue();
+        mGroupAdapter = mViewModel.getGroupAdapter().getValue();
 
-        if (groupAdapter != null) {
-            layoutManager = new GridLayoutManager(this, groupAdapter.getSpanCount());
-            layoutManager.setSpanSizeLookup(groupAdapter.getSpanSizeLookup());
+        if (mGroupAdapter != null) {
+            layoutManager = new GridLayoutManager(this, mGroupAdapter.getSpanCount());
+            layoutManager.setSpanSizeLookup(mGroupAdapter.getSpanSizeLookup());
         }
 
         final RecyclerView recyclerView = binding.listOfIssueses;
         recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(groupAdapter);
+        recyclerView.setAdapter(mGroupAdapter);
     }
 
-    @OnClick(R.id.button)
+    @OnClick(R.id.showIssuesbutton)
     public void onButtonClicked() {
         if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
             Toast.makeText(this, getString(R.string.enter_Owner_name_and_Repository), Toast.LENGTH_LONG).show();
         } else
             mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
+    }
+
+    @OnClick(R.id.showFavoriteIssuesButton)
+    public void onShowFaworiteButtonClicked() {
+        mViewModel.populateFavoriteAdapter();
     }
 
     /*  ====================== Code that may be needed in the future ===============================

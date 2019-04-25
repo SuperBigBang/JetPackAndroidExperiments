@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.Build;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.superbigbang.jetpackandroidexperiments.di.modules.roomModule.entityAn
 import com.superbigbang.jetpackandroidexperiments.model.issueResponse.ApiResponse;
 import com.superbigbang.jetpackandroidexperiments.model.issueResponse.Issue;
 import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.CardItem;
+import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.FavoriteCardItem;
 import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.HeaderItem;
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.Section;
@@ -44,7 +46,6 @@ public class MainActivityViewModel extends ViewModel {
     private AppDatabase mDatabase;
     private SavedIssueCardDao mSavedIssueCardDao;
     private IssueRepository mIssueRepository;
-    private Section mFromResponseIssuesLoadingSection;
     private Context mApplicationContext;
     private Resources mResourcesFromAppContext;
     private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = (item, view) -> {
@@ -58,6 +59,22 @@ public class MainActivityViewModel extends ViewModel {
             case R.id.titleOfIssue:
                 Toast.makeText(mApplicationContext, "Click on :" + item.getTitleOfIssue(), Toast.LENGTH_LONG).show();
                 break;
+        }
+    };
+    private FavoriteCardItem.OnCardItemChildClickListener onFavoriteCardItemChildClickListener = new FavoriteCardItem.OnCardItemChildClickListener() {
+        @Override
+        public void OnChildClick(FavoriteCardItem cardItem, View view) {
+            switch (view.getId()) {
+                case R.id.author_avatarOfSavedIssue:
+                    Toast.makeText(mApplicationContext, "Id of this card on DB" + cardItem.getId(), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.creatorNameOfSavedIssue:
+                    Toast.makeText(mApplicationContext, cardItem.getCreatorName(), Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.titleOfSavedIssue:
+                    Toast.makeText(mApplicationContext, "Click on :" + cardItem.getTitleOfIssue(), Toast.LENGTH_LONG).show();
+                    break;
+            }
         }
     };
     private CardItem.OnFavoriteListener onFavoriteListener = new CardItem.OnFavoriteListener() {
@@ -108,7 +125,6 @@ public class MainActivityViewModel extends ViewModel {
         //operate
         if (issues != null && issues.get(0) != null) {
             Toast.makeText(mApplicationContext, R.string.succeful_get_list_of_issueses, Toast.LENGTH_LONG).show();
-            Objects.requireNonNull(mGroupAdapter.getValue()).clear();
             populateAdapter(issues);
         } else {
             Toast.makeText(mApplicationContext, R.string.no_data_found_for_this_query, Toast.LENGTH_LONG).show();
@@ -149,8 +165,46 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
+    @SuppressLint("CheckResult")
+    public void populateFavoriteAdapter() {
+        Objects.requireNonNull(mGroupAdapter.getValue()).clear();
+        Section mFavoriteIssuesLoadingSection = new Section(new HeaderItem(R.string.favorite_issues_list));
+        Observable.fromCallable(new CallableGetAllIssuesFromDB() {
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        savedIssueCardList -> {
+                            showCurrentThread();
+                            for (int i = 0; i < savedIssueCardList.size(); i++) {
+                                FavoriteCardItem favoriteCardItem = null;
+                                SavedIssueCard savedIssueCard = savedIssueCardList.get(i);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    favoriteCardItem = new FavoriteCardItem(mResourcesFromAppContext.getColor(R.color.md_green_200, mApplicationContext.getTheme()),
+                                            savedIssueCard.getId(),
+                                            savedIssueCard.getTitleOfIssue(),
+                                            savedIssueCard.getCreatorName(),
+                                            savedIssueCard.getAuthor_avatar(),
+                                            onFavoriteCardItemChildClickListener
+                                    );
+                                } else {
+                                    favoriteCardItem = new FavoriteCardItem(mResourcesFromAppContext.getColor(R.color.md_green_200),
+                                            savedIssueCard.getId(),
+                                            savedIssueCard.getTitleOfIssue(),
+                                            savedIssueCard.getCreatorName(),
+                                            savedIssueCard.getAuthor_avatar(),
+                                            onFavoriteCardItemChildClickListener);
+                                }
+                                mFavoriteIssuesLoadingSection.add(favoriteCardItem);
+                            }
+                        },
+                        throwable -> handleError(throwable, null));
+        Objects.requireNonNull(mGroupAdapter.getValue()).add(mFavoriteIssuesLoadingSection);
+    }
+
     private void populateAdapter(List issues) {
-        mFromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
+        Objects.requireNonNull(mGroupAdapter.getValue()).clear();
+        Section mFromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
         for (int i = 0; i < issues.size(); i++) {
             CardItem cardItem = null;
             Issue issue = (Issue) issues.get(i);
@@ -189,6 +243,15 @@ public class MainActivityViewModel extends ViewModel {
         savedIssueCard.setTitleOfIssue(item.getTitleOfIssue().toString());
         mSavedIssueCardDao.insert(savedIssueCard);
         return savedIssueCard.getTitleOfIssue();
+    }
+
+    /////get all favorite issues from DB:
+    private class CallableGetAllIssuesFromDB implements Callable<List<SavedIssueCard>> {
+        @Override
+        public List<SavedIssueCard> call() throws Exception {
+            showCurrentThread();
+            return mSavedIssueCardDao.getAll();
+        }
     }
 
     ///////////////////////Testing methods///////////////////////////

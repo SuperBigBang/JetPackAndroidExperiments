@@ -26,14 +26,17 @@ import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.CardIt
 import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.FavoriteCardItem;
 import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.HeaderItem;
 import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.Item;
 import com.xwray.groupie.Section;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
@@ -48,6 +51,9 @@ public class MainActivityViewModel extends ViewModel {
     private IssueRepository mIssueRepository;
     private Context mApplicationContext;
     private Resources mResourcesFromAppContext;
+    private Section mFavoriteIssuesLoadingSection;
+    private Section mFromResponseIssuesLoadingSection;
+
     private CardItem.OnCardItemChildClickListener onCardItemChildClickListener = (item, view) -> {
         switch (view.getId()) {
             case R.id.author_avatar:
@@ -165,17 +171,20 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
+    /////favorite issues on DB
     @SuppressLint("CheckResult")
     public void populateFavoriteAdapter() {
         Objects.requireNonNull(mGroupAdapter.getValue()).clear();
-        Section mFavoriteIssuesLoadingSection = new Section(new HeaderItem(R.string.favorite_issues_list));
+        if (mFromResponseIssuesLoadingSection != null) {
+            mFromResponseIssuesLoadingSection = null;
+        }
+        mFavoriteIssuesLoadingSection = new Section(new HeaderItem(R.string.favorite_issues_list));
         Observable.fromCallable(new CallableGetAllIssuesFromDB() {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         savedIssueCardList -> {
-                            showCurrentThread();
                             for (int i = 0; i < savedIssueCardList.size(); i++) {
                                 FavoriteCardItem favoriteCardItem = null;
                                 SavedIssueCard savedIssueCard = savedIssueCardList.get(i);
@@ -202,9 +211,13 @@ public class MainActivityViewModel extends ViewModel {
         Objects.requireNonNull(mGroupAdapter.getValue()).add(mFavoriteIssuesLoadingSection);
     }
 
+    /////issues on the web
     private void populateAdapter(List issues) {
         Objects.requireNonNull(mGroupAdapter.getValue()).clear();
-        Section mFromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
+        if (mFavoriteIssuesLoadingSection != null) {
+            mFavoriteIssuesLoadingSection = null;
+        }
+        mFromResponseIssuesLoadingSection = new Section(new HeaderItem(R.string.issues_of_this_repository));
         for (int i = 0; i < issues.size(); i++) {
             CardItem cardItem = null;
             Issue issue = (Issue) issues.get(i);
@@ -225,22 +238,28 @@ public class MainActivityViewModel extends ViewModel {
                         onCardItemChildClickListener,
                         onFavoriteListener);
             }
-
             // cardItem.setOnItemClickListener();
             mFromResponseIssuesLoadingSection.add(cardItem);
         }
         Objects.requireNonNull(mGroupAdapter.getValue()).add(mFromResponseIssuesLoadingSection);
     }
 
+    public void removeSwappedItem(int positionOfItem) {
+        Item item = Objects.requireNonNull(mGroupAdapter.getValue()).getItem(positionOfItem);
+        // Change notification to the adapter happens automatically when the section is
+        // changed.
+        mFavoriteIssuesLoadingSection.remove(item);
+        deleteIssueFromDB(new SavedIssueCard(item.getId()));
+    }
+
     ///////////////////////Database operations///////////////////////////
 
     /////insert method and his wrapper:
     private String addNewIssueToDB(final CardItem item) throws Exception {
-        SavedIssueCard savedIssueCard = new SavedIssueCard();
-        savedIssueCard.setId(item.getId());
-        savedIssueCard.setAuthor_avatar(item.getAuthor_avatar().toString());
-        savedIssueCard.setCreatorName(item.getCreatorName().toString());
-        savedIssueCard.setTitleOfIssue(item.getTitleOfIssue().toString());
+        SavedIssueCard savedIssueCard = new SavedIssueCard(item.getId(),
+                item.getTitleOfIssue().toString(),
+                item.getCreatorName().toString(),
+                item.getAuthor_avatar().toString());
         mSavedIssueCardDao.insert(savedIssueCard);
         return savedIssueCard.getTitleOfIssue();
     }
@@ -249,11 +268,21 @@ public class MainActivityViewModel extends ViewModel {
     private class CallableGetAllIssuesFromDB implements Callable<List<SavedIssueCard>> {
         @Override
         public List<SavedIssueCard> call() throws Exception {
-            showCurrentThread();
             return mSavedIssueCardDao.getAll();
         }
     }
 
+    /////delete favorite issue from DB:
+    private void deleteIssueFromDB(SavedIssueCard savedIssueCard) {
+        Completable.fromAction(new Action() {
+            @Override
+            public void run() {
+                mSavedIssueCardDao.delete(savedIssueCard);
+                showCurrentThread();
+            }
+        }).subscribeOn(Schedulers.io())
+                .subscribe();
+    }
     ///////////////////////Testing methods///////////////////////////
     private void showCurrentThread() {
         Timber.e("Current Thread: %s", Thread.currentThread().getName());

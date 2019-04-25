@@ -12,5 +12,5 @@
     <string name="error_card_already_in_DB">This card has already been entered into the database.</string>
     <string name="error_in_retrieving_data">Error in retrieving data</string>
     <string name="show_favorite">Show favorite</string>
-    <string name="favorite_issues_list">Favorite issues list:</string>
+    <string name="favorite_issues_list">Favorite issues list (swipe to delete):</string>
 </resources>

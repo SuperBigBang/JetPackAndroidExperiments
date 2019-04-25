@@ -1,10 +1,10 @@
 package com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems;
 
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.squareup.picasso.Picasso;
 import com.superbigbang.jetpackandroidexperiments.ExtendApplication;
@@ -55,11 +55,9 @@ public class FavoriteCardItem extends BindableItem<FavoriteIssueItemBinding> {
         viewBinding.authorAvatarOfSavedIssue.setOnClickListener(v -> onCardItemChildClickListener.OnChildClick(FavoriteCardItem.this, v));
     }
 
-    private void handleError(Throwable error, String extraInfo) {
-        Timber.e(error);
-        if (extraInfo == null) {
-            Toast.makeText(ExtendApplication.getBaseComponent().getContext(), R.string.get_ERROR_show_info_in_Logcat, Toast.LENGTH_LONG).show();
-        }
+    @Override
+    public int getSwipeDirs() {
+        return ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     }
 
     ///////////////////////Testing methods///////////////////////////

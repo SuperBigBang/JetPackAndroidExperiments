@@ -8,12 +8,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.superbigbang.jetpackandroidexperiments.R;
 import com.superbigbang.jetpackandroidexperiments.databinding.ActivityMainBinding;
+import com.superbigbang.jetpackandroidexperiments.model.recyclerViewItems.SwipeTouchCallback;
 import com.superbigbang.jetpackandroidexperiments.screen.viewModels.MainActivityViewModel;
 import com.xwray.groupie.GroupAdapter;
+import com.xwray.groupie.TouchCallback;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -26,6 +29,31 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private GroupAdapter mGroupAdapter;
     private GridLayoutManager layoutManager;
+
+    private TouchCallback touchCallback = new SwipeTouchCallback(R.color.transparent) {
+        @Override
+        public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+            mViewModel.removeSwappedItem(viewHolder.getAdapterPosition());
+        }
+    };
+
+    @OnClick(R.id.showIssuesbutton)
+    public void onButtonClicked() {
+        if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
+            Toast.makeText(this, getString(R.string.enter_Owner_name_and_Repository), Toast.LENGTH_LONG).show();
+        } else
+            mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
+    }
+
+    @OnClick(R.id.showFavoriteIssuesButton)
+    public void onShowFaworiteButtonClicked() {
+        mViewModel.populateFavoriteAdapter();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +81,9 @@ public class MainActivity extends AppCompatActivity {
         final RecyclerView recyclerView = binding.listOfIssueses;
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mGroupAdapter);
-    }
 
-    @OnClick(R.id.showIssuesbutton)
-    public void onButtonClicked() {
-        if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
-            Toast.makeText(this, getString(R.string.enter_Owner_name_and_Repository), Toast.LENGTH_LONG).show();
-        } else
-            mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
-    }
-
-    @OnClick(R.id.showFavoriteIssuesButton)
-    public void onShowFaworiteButtonClicked() {
-        mViewModel.populateFavoriteAdapter();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(touchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     /*  ====================== Code that may be needed in the future ===============================

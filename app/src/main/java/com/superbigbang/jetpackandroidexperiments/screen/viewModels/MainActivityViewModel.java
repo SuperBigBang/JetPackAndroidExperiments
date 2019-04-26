@@ -283,13 +283,13 @@ public class MainActivityViewModel extends ViewModel {
         }).subscribeOn(Schedulers.io())
                 .subscribe();
     }
+
     ///////////////////////Testing methods///////////////////////////
     private void showCurrentThread() {
         Timber.e("Current Thread: %s", Thread.currentThread().getName());
     }
 
-    /////
-
+    /////add favorite issue to DB:
     private class CallableAddNewIssueToDB implements Callable<String> {
         private final CardItem cardItem;
 

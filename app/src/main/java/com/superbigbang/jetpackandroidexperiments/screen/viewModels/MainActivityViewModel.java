@@ -284,11 +284,6 @@ public class MainActivityViewModel extends ViewModel {
                 .subscribe();
     }
 
-    ///////////////////////Testing methods///////////////////////////
-    private void showCurrentThread() {
-        Timber.e("Current Thread: %s", Thread.currentThread().getName());
-    }
-
     /////add favorite issue to DB:
     private class CallableAddNewIssueToDB implements Callable<String> {
         private final CardItem cardItem;
@@ -301,5 +296,10 @@ public class MainActivityViewModel extends ViewModel {
         public String call() throws Exception {
             return addNewIssueToDB(cardItem);
         }
+    }
+
+    ///////////////////////Testing methods///////////////////////////
+    private void showCurrentThread() {
+        Timber.e("Current Thread: %s", Thread.currentThread().getName());
     }
 }

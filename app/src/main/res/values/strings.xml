@@ -13,4 +13,6 @@
     <string name="error_in_retrieving_data">Error in retrieving data</string>
     <string name="show_favorite">Show favorites</string>
     <string name="favorite_issues_list">Favorite issues list (swipe to delete):</string>
+    <string name="titleofissue">titleOfIssue</string>
+    <string name="creatorname">creatorName</string>
 </resources>

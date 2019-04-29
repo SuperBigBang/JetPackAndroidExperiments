@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <variable
+            name="savedIssueCard"
+            type="com.superbigbang.jetpackandroidexperiments.di.modules.roomModule.entityAndDao.SavedIssueCard" />
+    </data>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/card_set_list_view"
         android:layout_width="match_parent"
@@ -24,7 +31,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="titleOfIssue"
+                android:text="@{savedIssueCard.titleOfIssue}"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,14 +48,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/titleOfSavedIssue"
-                app:srcCompat="@drawable/palette" />
+                android:errorImage="@{@drawable/palette}"
+                android:url="@{savedIssueCard.author_avatar}" />
 
             <TextView
                 android:id="@+id/creatorNameOfSavedIssue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="creatorName"
+                android:text="@{savedIssueCard.creatorName}"
                 android:textAlignment="center"
                 app:layout_constraintBottom_toBottomOf="@+id/author_avatarOfSavedIssue"
                 app:layout_constraintEnd_toEndOf="parent"

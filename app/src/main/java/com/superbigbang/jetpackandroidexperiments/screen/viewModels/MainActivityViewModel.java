@@ -72,13 +72,13 @@ public class MainActivityViewModel extends ViewModel {
         public void OnChildClick(FavoriteCardItem cardItem, View view) {
             switch (view.getId()) {
                 case R.id.author_avatarOfSavedIssue:
-                    Toast.makeText(mApplicationContext, "Id of this card on DB" + cardItem.getId(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mApplicationContext, "Id of this card on DB" + cardItem.getSavedIssueCard().getId(), Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.creatorNameOfSavedIssue:
-                    Toast.makeText(mApplicationContext, cardItem.getCreatorName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mApplicationContext, cardItem.getSavedIssueCard().getCreatorName(), Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.titleOfSavedIssue:
-                    Toast.makeText(mApplicationContext, "Click on :" + cardItem.getTitleOfIssue(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mApplicationContext, "Click on :" + cardItem.getSavedIssueCard().getTitleOfIssue(), Toast.LENGTH_LONG).show();
                     break;
             }
         }
@@ -185,25 +185,11 @@ public class MainActivityViewModel extends ViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         savedIssueCardList -> {
-                            for (int i = 0; i < savedIssueCardList.size(); i++) {
-                                FavoriteCardItem favoriteCardItem = null;
-                                SavedIssueCard savedIssueCard = savedIssueCardList.get(i);
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                    favoriteCardItem = new FavoriteCardItem(mResourcesFromAppContext.getColor(R.color.md_green_200, mApplicationContext.getTheme()),
-                                            savedIssueCard.getId(),
-                                            savedIssueCard.getTitleOfIssue(),
-                                            savedIssueCard.getCreatorName(),
-                                            savedIssueCard.getAuthor_avatar(),
+                            for (SavedIssueCard savedIssueCard : savedIssueCardList) {
+                                FavoriteCardItem favoriteCardItem = new FavoriteCardItem(
+                                        savedIssueCard,
                                             onFavoriteCardItemChildClickListener
                                     );
-                                } else {
-                                    favoriteCardItem = new FavoriteCardItem(mResourcesFromAppContext.getColor(R.color.md_green_200),
-                                            savedIssueCard.getId(),
-                                            savedIssueCard.getTitleOfIssue(),
-                                            savedIssueCard.getCreatorName(),
-                                            savedIssueCard.getAuthor_avatar(),
-                                            onFavoriteCardItemChildClickListener);
-                                }
                                 mFavoriteIssuesLoadingSection.add(favoriteCardItem);
                             }
                         },

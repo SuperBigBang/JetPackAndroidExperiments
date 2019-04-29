@@ -18,9 +18,6 @@ import com.superbigbang.jetpackandroidexperiments.screen.viewModels.MainActivity
 import com.xwray.groupie.GroupAdapter;
 import com.xwray.groupie.TouchCallback;
 
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-
 public class MainActivity extends AppCompatActivity {
 
     public static final int LAYOUT = R.layout.activity_main;
@@ -42,24 +39,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    @OnClick(R.id.showIssuesbutton)
-    public void onButtonClicked() {
-        if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
-            Toast.makeText(this, getString(R.string.enter_Owner_name_and_Repository), Toast.LENGTH_LONG).show();
-        } else
-            mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
-    }
-
-    @OnClick(R.id.showFavoriteIssuesButton)
-    public void onShowFaworiteButtonClicked() {
-        mViewModel.populateFavoriteAdapter();
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, LAYOUT);
-        ButterKnife.bind(this);
 
         mViewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         // Handle changes emitted by LiveData
@@ -84,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(touchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        setOnClickListenersToViewItems();
+    }
+
+    private void setOnClickListenersToViewItems() {
+        binding.showIssuesbutton.setOnClickListener(v -> {
+            if (binding.ownerName.getText().length() == 0 || binding.repositoryName.getText().length() == 0) {
+                Toast.makeText(this, getString(R.string.enter_Owner_name_and_Repository), Toast.LENGTH_LONG).show();
+            } else
+                mViewModel.loadIssues(binding.ownerName.getText().toString().trim(), binding.repositoryName.getText().toString().trim());
+        });
+
+        binding.showFavoriteIssuesButton.setOnClickListener(v -> mViewModel.populateFavoriteAdapter());
     }
 
     /*  ====================== Code that may be needed in the future ===============================
